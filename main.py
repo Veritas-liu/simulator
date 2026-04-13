@@ -8,11 +8,9 @@ if __name__ == '__main__':
     topo = load_topo('./Data/example/topo.json')
     flows = load_routed_flows('./Data/example/routed_ring_flows_0_0.json')
     sim = Sim(topo)
-    # sim = Sim_slow(topo)
     for flow in flows:
         if flow.dependency_count == 0:
             flow.start_time = 0
-            # sim.flows.append(flow)
             sim.add_flow(flow)
     # step_count = 0
     # print("flow count = ", len(sim.flows))
@@ -32,7 +30,6 @@ if __name__ == '__main__':
             flow.dependency_count -= 1
             if flow.dependency_count == 0:
                 flow.start_time = sim.time
-                # sim.flows.append(flow)
                 sim.add_flow(flow)
     print("Simulation finished, total time: ", sim.time)
     # with open(dir + '/jct.json', 'w') as f:
