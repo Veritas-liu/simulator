@@ -90,6 +90,7 @@ def load_routed_flows(path):
         raise ValueError('flows file must contain a JSON array')
 
     flows = []
+    idtoidx = {}
     for i, item in enumerate(data):
         if not isinstance(item, list):
             raise ValueError('each flow item must be an object')
@@ -119,7 +120,14 @@ def load_routed_flows(path):
             continue
 
         flow = Flow(fid, size, src, dst, next_flows, path)
+        idtoidx[fid] = len(flows)
         flows.append(flow)
+
+    for f in flows:
+        for nfid in f.next_flows:
+            nf = flows[idtoidx.get(nfid)] if nfid in idtoidx else None
+            if nf is not None:
+                nf.dependency_count += 1
 
     return flows
 
